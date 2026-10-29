@@ -133,7 +133,7 @@ data:
   ENGINERECEIVETIMEOUT: |-
     0
   EXTERNALHOSTNAME: |-
-    fme-basic.local
+    localhost
   EXTERNALPORT: |-
     443
   FIRSTLOGINCHANGEPASSWORD: |-
@@ -148,18 +148,6 @@ data:
     200
   NODEMANAGED: |-
     false
-  PGSQLADMINDATABASE: |-
-    postgres
-  PGSQLADMINUSER: |-
-    postgres
-  PGSQLDATABASENAME: |-
-    fmeflow
-  PGSQLHOSTNAME: |-
-    postgresql.default.svc.cluster.local
-  PGSQLPORT: |-
-    5432
-  PGSQLUSERNAME: |-
-    fmeflow
   POSTGRESQLSSL: |-
     false
   SCHEDULERIDLEWAITTIME: |-
@@ -349,14 +337,14 @@ spec:
                   fieldPath: status.podIP
             - name: "PGSQLDATABASENAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLDATABASENAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLHOSTNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -364,14 +352,14 @@ spec:
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLPORT"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLUSERNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
                 configMapKeyRef:
@@ -501,9 +489,9 @@ spec:
                   key: "FIRSTLOGINCHANGEPASSWORD"
             - name: "PGSQLADMINDATABASE"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLADMINDATABASE"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "admin-database"
             - name: "PGSQLADMINPASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -511,19 +499,19 @@ spec:
                   key: "admin-password"
             - name: "PGSQLADMINUSER"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLADMINUSER"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "admin-username"
             - name: "PGSQLDATABASENAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLDATABASENAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLHOSTNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -531,14 +519,14 @@ spec:
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLPORT"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLUSERNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
                 configMapKeyRef:
@@ -603,14 +591,14 @@ spec:
                   key: "MAINTENANCEIDLEWAIT"
             - name: "PGSQLDATABASENAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLDATABASENAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLHOSTNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -618,14 +606,14 @@ spec:
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLPORT"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLUSERNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
                 configMapKeyRef:
@@ -738,14 +726,14 @@ spec:
               value: localhost
             - name: "PGSQLDATABASENAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLDATABASENAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLHOSTNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -753,14 +741,14 @@ spec:
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLPORT"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLUSERNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
                 configMapKeyRef:
@@ -830,14 +818,14 @@ spec:
                   key: "MAXTHREADS"
             - name: "PGSQLDATABASENAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLDATABASENAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLHOSTNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -845,14 +833,14 @@ spec:
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLPORT"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
-                configMapKeyRef:
-                  name: fmeflow-basic-fmeflow
-                  key: "PGSQLUSERNAME"
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
                 configMapKeyRef:

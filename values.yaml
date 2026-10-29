@@ -13,9 +13,10 @@
 # - websocket: a StatefulSet used for the web UI notifications,
 # - engine-<group>: one Deployment per FME engine group.
 #
-# The deployment wide configuration (external hostname, database connection,
-# ...) lives in the `fmeflow.configMaps.content` ConfigMap and is injected in
-# the containers as environment variables. Override it there instead of
+# The deployment wide configuration (external hostname, FME Flow tuning, ...)
+# lives in the `fmeflow.configMaps.content` ConfigMap, the database connection
+# and credentials in a Secret (`fme-database` by default), both are injected
+# in the containers as environment variables. Override them there instead of
 # overriding the environment of every container.
 #
 # All the object names are generated from the Helm release name (the
@@ -26,15 +27,9 @@
 # The FME Flow version used by all the images
 fmeflow-version: &fmeflow-version '2026.3.1'
 
-database-password: &database-password
+database-secret: &database-secret
   type: secret
   name: fme-database
-  key: password
-
-database-admin-password: &database-admin-password
-  type: secret
-  name: fme-database
-  key: admin-password
 
 shared-volumes: &shared-volumes
   fmeflowdata:
@@ -71,22 +66,20 @@ service-names-env: &service-names-env
 
 database-env: &database-env
   PGSQLHOSTNAME:
-    type: configMap
-    name: self
-    key: PGSQLHOSTNAME
+    <<: *database-secret
+    key: hostname
   PGSQLPORT:
-    type: configMap
-    name: self
-    key: PGSQLPORT
+    <<: *database-secret
+    key: port
   PGSQLDATABASENAME:
-    type: configMap
-    name: self
-    key: PGSQLDATABASENAME
+    <<: *database-secret
+    key: database
   PGSQLUSERNAME:
-    type: configMap
-    name: self
-    key: PGSQLUSERNAME
-  PGSQLPASSWORD: *database-password
+    <<: *database-secret
+    key: username
+  PGSQLPASSWORD:
+    <<: *database-secret
+    key: password
   POSTGRESQLSSL:
     type: configMap
     name: self
@@ -140,8 +133,12 @@ fmeflow:
     fsGroup: 1363
 
   # The deployment wide configuration, injected as environment variables in
-  # the containers. PGSQLUSERNAME must be `<user>@<host>` on Azure Database
-  # for PostgreSQL, and AZUREPOSTGRESQL must be set to 'true' in that case.
+  # the containers. The database connection and credentials are not here,
+  # they are read from a Secret (fme-database by default) with the keys:
+  # hostname, port, database, username, password, admin-username,
+  # admin-password, admin-database (see the README for an ExternalSecret
+  # example). On Azure Database for PostgreSQL the username must be
+  # `<user>@<host>` and AZUREPOSTGRESQL must be set to 'true'.
   configMaps:
     content:
       EXTERNALHOSTNAME:
@@ -150,18 +147,6 @@ fmeflow:
         value: '443'
       WEBPROTOCOL:
         value: https
-      PGSQLHOSTNAME:
-        value: postgresql
-      PGSQLPORT:
-        value: '5432'
-      PGSQLDATABASENAME:
-        value: fmeflow
-      PGSQLUSERNAME:
-        value: fmeflow
-      PGSQLADMINUSER:
-        value: postgres
-      PGSQLADMINDATABASE:
-        value: postgres
       AZUREPOSTGRESQL:
         value: 'false'
       POSTGRESQLSSL:
@@ -279,14 +264,14 @@ fmeflow:
               name: self
               key: FIRSTLOGINCHANGEPASSWORD
             PGSQLADMINUSER:
-              type: configMap
-              name: self
-              key: PGSQLADMINUSER
-            PGSQLADMINPASSWORD: *database-admin-password
+              <<: *database-secret
+              key: admin-username
+            PGSQLADMINPASSWORD:
+              <<: *database-secret
+              key: admin-password
             PGSQLADMINDATABASE:
-              type: configMap
-              name: self
-              key: PGSQLADMINDATABASE
+              <<: *database-secret
+              key: admin-database
             AZUREPOSTGRESQL:
               type: configMap
               name: self

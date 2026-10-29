@@ -92,8 +92,8 @@ image hash automation in the argocd-gs-\*-apps repositories).
 
 ### Deployment wide configuration
 
-The external hostname, the database connection and the FME Flow tuning live in a
-ConfigMap (`fme.fmeflow.configMaps.content`) injected as environment variables in the
+The external hostname and the FME Flow tuning live in a ConfigMap
+(`fmeflow.fmeflow.configMaps.content`) injected as environment variables in the
 containers, override the values there instead of overriding every container:
 
 ```yaml
@@ -103,24 +103,78 @@ fmeflow:
       content:
         EXTERNALHOSTNAME:
           value: fme.example.com
-        PGSQLHOSTNAME:
-          value: pg.example.com
-        PGSQLUSERNAME:
-          value: fmeflow@pg.example.com # Azure Database for PostgreSQL format
         AZUREPOSTGRESQL:
-          value: 'true'
+          value: 'true' # Azure Database for PostgreSQL, the username (in the
+          # database Secret) must then be in the <user>@<host> format
         POSTGRESQLSSL:
           value: 'true'
 ```
 
-The database passwords are read from a Secret, by default `fme-database` with the
-`password` and `admin-password` keys, override the `PGSQLPASSWORD` and
-`PGSQLADMINPASSWORD` environment variables of the containers to use your own
-(for example an ExternalSecret).
+### Database
+
+The database connection and credentials are read from a Secret, `fme-database`
+by default, with these keys:
+
+| Key              | Environment variable | Used by                    |
+| ---------------- | -------------------- | -------------------------- |
+| `hostname`       | `PGSQLHOSTNAME`      | all the components         |
+| `port`           | `PGSQLPORT`          | all the components         |
+| `database`       | `PGSQLDATABASENAME`  | all the components         |
+| `username`       | `PGSQLUSERNAME`      | all the components         |
+| `password`       | `PGSQLPASSWORD`      | all the components         |
+| `admin-username` | `PGSQLADMINUSER`     | the `dbinit` initContainer |
+| `admin-password` | `PGSQLADMINPASSWORD` | the `dbinit` initContainer |
+| `admin-database` | `PGSQLADMINDATABASE` | the `dbinit` initContainer |
+
+Create it with an ExternalSecret (recommended, the secret never lives in Git),
+for example:
+
+```yaml
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: fme-database
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: SecretStore
+    name: my-secret-store
+  target:
+    name: fme-database
+  data:
+    - secretKey: hostname
+      remoteRef:
+        key: my-pg-host
+    - secretKey: port
+      remoteRef:
+        key: my-pg-port
+    - secretKey: database
+      remoteRef:
+        key: my-fmeflow-database
+    - secretKey: username
+      remoteRef:
+        key: my-fmeflow-username
+    - secretKey: password
+      remoteRef:
+        key: my-fmeflow-password
+    - secretKey: admin-username
+      remoteRef:
+        key: my-admin-username
+    - secretKey: admin-password
+      remoteRef:
+        key: my-admin-password
+    - secretKey: admin-database
+      remoteRef:
+        key: my-admin-database
+```
+
+To use another Secret, override the `PGSQL*` environment variables of the
+containers (`type: secret`, `name`, `key`), they all default to the
+`fme-database` Secret.
 
 ### Storage
 
-The FME Flow system share is a PersistentVolumeClaim (`fme.fmeflow.persistentVolumeClaims.data`)
+The FME Flow system share is a PersistentVolumeClaim (`fmeflow.fmeflow.persistentVolumeClaims.data`)
 mounted by all the components in `/data/fmeflowdata`, it should be `ReadWriteMany` when the
 components can run on different nodes. Use `fullnameOverride` to reuse an existing claim
 (see [MIGRATION.md](MIGRATION.md)).
@@ -159,7 +213,7 @@ fmeflow:
 ### Image pull secrets
 
 The FME Flow images are on Docker Hub (`safesoftware/*`), reference existing docker
-registry secrets with `fme.fmeflow.global.image.pullSecrets`.
+registry secrets with `fmeflow.fmeflow.global.image.pullSecrets`.
 
 ### Health checks
 

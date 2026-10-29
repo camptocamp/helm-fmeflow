@@ -30,10 +30,10 @@ names, the FME Flow state itself lives in the PostgreSQL database and in the sys
 | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `fmeflow.image.tag`                                                                   | `fmeflow.services.<service>.*.image.tag` (all the components use the same FME Flow version)                                                                                                                              |
 | `fmeflow.image.pullSecrets`                                                           | `fmeflow.global.image.pullSecrets`                                                                                                                                                                                       |
-| `fmeflow.database.host/port/name/user`                                                | `fmeflow.configMaps.content.PGSQLHOSTNAME/PGSQLPORT/PGSQLDATABASENAME/PGSQLUSERNAME.value`                                                                                                                               |
-| `fmeflow.database.passwordSecret/passwordSecretKey`                                   | `PGSQLPASSWORD` env (`type: secret`) of the containers, defaults to the `fme-database` Secret, `password` key                                                                                                            |
-| `fmeflow.database.adminUser/adminDatabase/adminPasswordSecret/adminPasswordSecretKey` | `fmeflow.configMaps.content.PGSQLADMINUSER/PGSQLADMINDATABASE.value` and the `PGSQLADMINPASSWORD` env of the `dbinit` initContainer                                                                                      |
-| `fmeflow.database.azure`                                                              | Set `PGSQLUSERNAME` to `<user>@<host>` and `fmeflow.configMaps.content.AZUREPOSTGRESQL.value` to `'true'`                                                                                                                |
+| `fmeflow.database.host/port/name/user`                                                | The `hostname`/`port`/`database`/`username` keys of the database Secret (`fme-database` by default)                                                                                                                      |
+| `fmeflow.database.passwordSecret/passwordSecretKey`                                   | The `password` key of the database Secret                                                                                                                                                                                |
+| `fmeflow.database.adminUser/adminDatabase/adminPasswordSecret/adminPasswordSecretKey` | The `admin-username`/`admin-database`/`admin-password` keys of the database Secret (used by the `dbinit` initContainer)                                                                                                  |
+| `fmeflow.database.azure`                                                              | Set the `username` key of the database Secret to `<user>@<host>` and `fmeflow.configMaps.content.AZUREPOSTGRESQL.value` to `'true'`                                                                                      |
 | `fmeflow.database.ssl`                                                                | `fmeflow.configMaps.content.POSTGRESQLSSL.value: 'true'`                                                                                                                                                                 |
 | `deployment.hostname`                                                                 | `fmeflow.configMaps.content.EXTERNALHOSTNAME.value`                                                                                                                                                                      |
 | `deployment.port` / TLS disabled                                                      | `fmeflow.configMaps.content.EXTERNALPORT.value` / `WEBPROTOCOL.value: http`                                                                                                                                              |
@@ -96,9 +96,15 @@ fmeflow:
             secretName: fmeflow-tls # The name used by the Safe Software chart
 ```
 
-The database Secret(s) (for example created by ExternalSecrets in the application chart)
-are not managed by this chart, reference them in the `PGSQLPASSWORD` /
-`PGSQLADMINPASSWORD` environment variables of the containers.
+The database Secret (for example created by an ExternalSecret in the application
+chart) is not managed by this chart: give it the name expected by the chart
+(`fme-database` by default) with the keys listed in the README (`hostname`,
+`port`, `database`, `username`, `password`, `admin-username`, `admin-password`,
+`admin-database`), or override the `PGSQL*` environment variables of the
+containers to use your own names and keys. With an ExternalSecret, adding the
+missing keys to the existing resource is enough, the remote references can be
+shared between the keys (for example `admin-username` and `username` pointing
+to the same remote key).
 
 ## After the migration
 
