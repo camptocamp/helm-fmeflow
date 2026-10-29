@@ -1,0 +1,8 @@
+fmeflow:
+  fmeflow:
+    configMaps:
+      content:
+        EXTERNALHOSTNAME:
+          value: fme-basic.local
+        PGSQLHOSTNAME:
+          value: postgresql.default.svc.cluster.local

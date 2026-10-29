@@ -1,0 +1,653 @@
+# Default values for the fmeflow chart.
+#
+# FME Flow (2024.1 and newer) deployed with the camptocamp/helm-application
+# chart. This chart does not contain any template of its own, it only provides
+# the default values of a FME Flow deployment, everything is rendered by the
+# helm-application chart (aliased `fmeflow`).
+#
+# The FME Flow components are:
+# - core: a StatefulSet with the `dbinit` initContainer (database schema
+#   creation and migration) and the `core`, `web` and `fmeutility` containers
+#   (the web UI is served on port 8080 of the core pod),
+# - queue: a StatefulSet running the FME Flow queue,
+# - websocket: a StatefulSet used for the web UI notifications,
+# - engine-<group>: one Deployment per FME engine group.
+#
+# The deployment wide configuration (external hostname, database connection,
+# ...) lives in the `fmeflow.configMaps.content` ConfigMap and is injected in
+# the containers as environment variables. Override it there instead of
+# overriding the environment of every container.
+#
+# All the object names are generated from the Helm release name (the
+# helm-application naming conventions), several FME Flow instances can be
+# deployed in the same namespace as long as they use different release names,
+# different hostnames, different databases and different system shares.
+
+# The FME Flow version used by all the images
+fmeflow-version: &fmeflow-version '2026.3.1'
+
+database-password: &database-password
+  type: secret
+  name: fme-database
+  key: password
+
+database-admin-password: &database-admin-password
+  type: secret
+  name: fme-database
+  key: admin-password
+
+shared-volumes: &shared-volumes
+  fmeflowdata:
+    persistentVolumeClaim:
+      claimName: self-pvc-data
+
+shared-volume-mounts: &shared-volume-mounts
+  /data/fmeflowdata:
+    name: fmeflowdata
+
+external-env: &external-env
+  EXTERNALHOSTNAME:
+    type: configMap
+    name: self
+    key: EXTERNALHOSTNAME
+  EXTERNALPORT:
+    type: configMap
+    name: self
+    key: EXTERNALPORT
+  WEBPROTOCOL:
+    type: configMap
+    name: self
+    key: WEBPROTOCOL
+
+service-names-env: &service-names-env
+  SERVICE_CORE_NAME:
+    type: configMap
+    name: self-metadata
+    key: SERVICE_CORE_NAME
+  SERVICE_QUEUE_NAME:
+    type: configMap
+    name: self-metadata
+    key: SERVICE_QUEUE_NAME
+
+database-env: &database-env
+  PGSQLHOSTNAME:
+    type: configMap
+    name: self
+    key: PGSQLHOSTNAME
+  PGSQLPORT:
+    type: configMap
+    name: self
+    key: PGSQLPORT
+  PGSQLDATABASENAME:
+    type: configMap
+    name: self
+    key: PGSQLDATABASENAME
+  PGSQLUSERNAME:
+    type: configMap
+    name: self
+    key: PGSQLUSERNAME
+  PGSQLPASSWORD: *database-password
+  POSTGRESQLSSL:
+    type: configMap
+    name: self
+    key: POSTGRESQLSSL
+
+core-healthcheck-liveness-probe: &core-healthcheck-liveness-probe
+  httpGet:
+    path: /fmeapiv4/healthcheck/liveness
+    port: 8080
+  initialDelaySeconds: 60
+  failureThreshold: 6
+  timeoutSeconds: 5
+  periodSeconds: 10
+
+core-healthcheck-readiness-probe: &core-healthcheck-readiness-probe
+  httpGet:
+    path: /fmeapiv4/healthcheck/readiness
+    port: 8080
+  initialDelaySeconds: 60
+  failureThreshold: 3
+  timeoutSeconds: 5
+  periodSeconds: 5
+
+core-healthcheck-startup-probe: &core-healthcheck-startup-probe
+  httpGet:
+    path: /fmeapiv4/healthcheck/readiness
+    port: 8080
+  initialDelaySeconds: 10
+  failureThreshold: 20
+  timeoutSeconds: 5
+  periodSeconds: 30
+
+fmeflow:
+  metadata:
+    enabled: true
+
+  # The FME images are pulled from Docker Hub by default, use
+  # global.image.pullSecrets to reference existing docker registry secrets.
+  dockerregistry:
+    enabled: false
+
+  global:
+    image:
+      pullPolicy: IfNotPresent
+      # pullSecrets:
+      #   - name: my-docker-registry-secret
+    revisionHistoryLimit: 3
+
+  # The FME Flow processes run as the fme user (1363)
+  podSecurityContext:
+    fsGroup: 1363
+
+  # The deployment wide configuration, injected as environment variables in
+  # the containers. PGSQLUSERNAME must be `<user>@<host>` on Azure Database
+  # for PostgreSQL, and AZUREPOSTGRESQL must be set to 'true' in that case.
+  configMaps:
+    content:
+      EXTERNALHOSTNAME:
+        value: localhost
+      EXTERNALPORT:
+        value: '443'
+      WEBPROTOCOL:
+        value: https
+      PGSQLHOSTNAME:
+        value: postgresql
+      PGSQLPORT:
+        value: '5432'
+      PGSQLDATABASENAME:
+        value: fmeflow
+      PGSQLUSERNAME:
+        value: fmeflow
+      PGSQLADMINUSER:
+        value: postgres
+      PGSQLADMINDATABASE:
+        value: postgres
+      AZUREPOSTGRESQL:
+        value: 'false'
+      POSTGRESQLSSL:
+        value: 'false'
+      FIRSTLOGINCHANGEPASSWORD:
+        value: 'true'
+      SYSTEMAUTHENTICATIONENABLED:
+        value: 'true'
+      SHOWPASSWORDLOGINUI:
+        value: 'true'
+      MAXTHREADS:
+        value: '200'
+      HIKARIDBMAXCONNECTIONS:
+        value: '30'
+      COREDEBUGLEVEL:
+        value: NONE
+      ENGINEDEBUGLEVEL:
+        value: NONE
+      SCHEDULERIDLEWAITTIME:
+        value: '5000'
+      MAINTENANCEIDLEWAIT:
+        value: '90'
+      ENABLETRANSACTIONQUEUETIMEOUT:
+        value: 'false'
+      ENABLEDFEATURES:
+        value: ''
+      WAITFORDATABASE:
+        value: 'true'
+      WAITFORQUEUE:
+        value: 'true'
+      NODEMANAGED:
+        value: 'false'
+      ENGINERECEIVETIMEOUT:
+        value: '0'
+      HIDEHOSTCONTENT:
+        value: 'true'
+
+  # The FME Flow system share, it must be shared (ReadWriteMany) by all the
+  # components when they can run on different nodes. Use fullnameOverride to
+  # reuse an existing claim (see MIGRATION.md).
+  persistentVolumeClaims:
+    data:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        # storageClassName: my-class
+
+  # The Ingress is disabled by default, enable it and set the hosts, for
+  # example:
+  # ingress:
+  #   enabled: true
+  #   ingressClassName: traefik
+  #   annotations:
+  #     cert-manager.io/cluster-issuer: letsencrypt-prod
+  #     traefik.ingress.kubernetes.io/router.tls: 'true'
+  #   hostGroups:
+  #     main:
+  #       hosts:
+  #         - fme.example.com
+  #       tls:
+  #         enabled: true
+  #         secretName: fme-tls
+  #
+  # and enable the ingress of the core (web UI, path /) and websocket
+  # (path /websocket) services.
+  ingress:
+    enabled: false
+
+  services:
+    core:
+      type: StatefulSet
+      replicaCount: 1
+      affinity:
+        podAntiAffinity:
+          topologyKey: kubernetes.io/hostname
+      volumes: *shared-volumes
+      service:
+        type: ClusterIP
+        clusterIP: None
+        servicePort: 8080
+        ports:
+          - name: core
+            port: 7070
+            protocol: TCP
+            targetPort: core
+          - name: web
+            port: 8080
+            protocol: TCP
+            targetPort: web
+      ingress:
+        enabled: false
+        path: /
+      initContainers:
+        dbinit:
+          image:
+            repository: safesoftware/fmeflow-core
+            tag: *fmeflow-version
+            sha: ''
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+          volumeMounts: *shared-volume-mounts
+          env:
+            <<: *database-env
+            PRIMARY_PROCESS:
+              value: initpgsql
+            RUNSETUP:
+              value: 'true'
+            FIRSTLOGINCHANGEPASSWORD:
+              type: configMap
+              name: self
+              key: FIRSTLOGINCHANGEPASSWORD
+            PGSQLADMINUSER:
+              type: configMap
+              name: self
+              key: PGSQLADMINUSER
+            PGSQLADMINPASSWORD: *database-admin-password
+            PGSQLADMINDATABASE:
+              type: configMap
+              name: self
+              key: PGSQLADMINDATABASE
+            AZUREPOSTGRESQL:
+              type: configMap
+              name: self
+              key: AZUREPOSTGRESQL
+      containers:
+        core:
+          image:
+            repository: safesoftware/fmeflow-core
+            tag: *fmeflow-version
+            sha: ''
+          ports:
+            core:
+              containerPort: 7070
+          resources:
+            requests:
+              memory: 1.5Gi
+              cpu: 200m
+          volumeMounts: *shared-volume-mounts
+          livenessProbe: *core-healthcheck-liveness-probe
+          readinessProbe: *core-healthcheck-readiness-probe
+          startupProbe: *core-healthcheck-startup-probe
+          env:
+            <<: [*external-env, *service-names-env, *database-env]
+            PRIMARY_PROCESS:
+              value: core
+            COREHOSTNAME:
+              value: localhost
+            NODENAMENS:
+              order: 1
+              value: $(SERVICE_CORE_NAME)
+            QUEUENAMENS:
+              order: 1
+              value: $(SERVICE_QUEUE_NAME)
+            COREDEBUGLEVEL:
+              type: configMap
+              name: self
+              key: COREDEBUGLEVEL
+            FIRSTLOGINCHANGEPASSWORD:
+              type: configMap
+              name: self
+              key: FIRSTLOGINCHANGEPASSWORD
+            SYSTEMAUTHENTICATIONENABLED:
+              type: configMap
+              name: self
+              key: SYSTEMAUTHENTICATIONENABLED
+            SCHEDULERIDLEWAITTIME:
+              type: configMap
+              name: self
+              key: SCHEDULERIDLEWAITTIME
+            MAINTENANCEIDLEWAIT:
+              type: configMap
+              name: self
+              key: MAINTENANCEIDLEWAIT
+            ENABLETRANSACTIONQUEUETIMEOUT:
+              type: configMap
+              name: self
+              key: ENABLETRANSACTIONQUEUETIMEOUT
+            ENABLEDFEATURES:
+              type: configMap
+              name: self
+              key: ENABLEDFEATURES
+            WAITFORDATABASE:
+              type: configMap
+              name: self
+              key: WAITFORDATABASE
+            WAITFORQUEUE:
+              type: configMap
+              name: self
+              key: WAITFORQUEUE
+        web:
+          image:
+            repository: safesoftware/fmeflow-web
+            tag: *fmeflow-version
+            sha: ''
+          ports:
+            web:
+              containerPort: 8080
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 200m
+          volumeMounts: *shared-volume-mounts
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            failureThreshold: 6
+            timeoutSeconds: 5
+          readinessProbe: *core-healthcheck-readiness-probe
+          startupProbe: *core-healthcheck-startup-probe
+          env:
+            <<: [*external-env, *service-names-env, *database-env]
+            COREHOSTNAME:
+              value: localhost
+            NODENAMENS:
+              order: 1
+              value: $(SERVICE_CORE_NAME)
+            MAXTHREADS:
+              type: configMap
+              name: self
+              key: MAXTHREADS
+            HIKARIDBMAXCONNECTIONS:
+              type: configMap
+              name: self
+              key: HIKARIDBMAXCONNECTIONS
+            HIDEHOSTCONTENT:
+              type: configMap
+              name: self
+              key: HIDEHOSTCONTENT
+            SHOWPASSWORDLOGINUI:
+              type: configMap
+              name: self
+              key: SHOWPASSWORDLOGINUI
+            SYSTEMAUTHENTICATIONENABLED:
+              type: configMap
+              name: self
+              key: SYSTEMAUTHENTICATIONENABLED
+            COREDEBUGLEVEL:
+              type: configMap
+              name: self
+              key: COREDEBUGLEVEL
+            ENABLEDFEATURES:
+              type: configMap
+              name: self
+              key: ENABLEDFEATURES
+        fmeutility:
+          image:
+            repository: safesoftware/fmeflow-engine
+            tag: *fmeflow-version
+            sha: ''
+          resources:
+            requests:
+              memory: 1.5Gi
+              cpu: 200m
+          volumeMounts: *shared-volume-mounts
+          env:
+            <<: [*external-env, *database-env]
+            COREHOSTNAME:
+              value: localhost
+            NODENAME:
+              value: localhost
+            ENGINETYPE:
+              value: UTILITY
+            NODEMANAGED:
+              type: configMap
+              name: self
+              key: NODEMANAGED
+            WAITFORDATABASE:
+              type: configMap
+              name: self
+              key: WAITFORDATABASE
+
+    queue:
+      type: StatefulSet
+      replicaCount: 1
+      affinity:
+        podAntiAffinity:
+          topologyKey: kubernetes.io/hostname
+      volumes: *shared-volumes
+      service:
+        type: ClusterIP
+        clusterIP: None
+        ports:
+          - name: redis
+            port: 6379
+            protocol: TCP
+            targetPort: queue
+      containers:
+        queue:
+          image:
+            repository: safesoftware/fmeflow-queue
+            tag: *fmeflow-version
+            sha: ''
+          ports:
+            queue:
+              containerPort: 6379
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+          volumeMounts: *shared-volume-mounts
+          # TCP probes, the upstream chart probes with redis-cli and the redis
+          # password hardcoded in its templates, override these probes if a
+          # deeper check is wanted.
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+            periodSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+            failureThreshold: 5
+          env:
+            POD_IP:
+              type: valueFrom
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+
+    websocket:
+      type: StatefulSet
+      replicaCount: 1
+      volumes: *shared-volumes
+      service:
+        type: ClusterIP
+        clusterIP: None
+        servicePort: 7078
+        ports:
+          - name: websocket
+            port: 7078
+            protocol: TCP
+            targetPort: websocket
+      ingress:
+        enabled: false
+        path: /websocket
+      containers:
+        websocket:
+          image:
+            repository: safesoftware/fmeflow-core
+            tag: *fmeflow-version
+            sha: ''
+          ports:
+            websocket:
+              containerPort: 7078
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+          volumeMounts: *shared-volume-mounts
+          livenessProbe:
+            tcpSocket:
+              port: 7078
+            initialDelaySeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 7078
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 5
+          env:
+            PRIMARY_PROCESS:
+              value: websocket
+
+    engine-standard:
+      replicaCount: 1
+      # Let the running jobs finish before killing the engines
+      terminationGracePeriodSeconds: 300
+      volumes: *shared-volumes
+      containers:
+        engine:
+          image:
+            repository: safesoftware/fmeflow-engine
+            tag: *fmeflow-version
+            sha: ''
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 200m
+          volumeMounts: *shared-volume-mounts
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    fmePid=$(pidof fme);
+                    jobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                    currentJobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                    while ls -lR /proc/$fmePid 2>&1 | grep -q job_; do
+                      while [ "$jobId" = "$currentJobId" ]
+                      do
+                        currentJobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                        sleep 1;
+                      done
+                      exit
+                    done
+          env:
+            <<: [*external-env, *service-names-env, *database-env]
+            COREHOSTNAME:
+              order: 1
+              value: $(SERVICE_CORE_NAME)
+            NODENAME:
+              type: valueFrom
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            ENGINETYPE:
+              value: STANDARD
+            ENGINEPROPERTIES:
+              value: standard-group
+            NODEMANAGED:
+              type: configMap
+              name: self
+              key: NODEMANAGED
+            ENGINERECEIVETIMEOUT:
+              type: configMap
+              name: self
+              key: ENGINERECEIVETIMEOUT
+            ENGINEDEBUGLEVEL:
+              type: configMap
+              name: self
+              key: ENGINEDEBUGLEVEL
+            WAITFORDATABASE:
+              type: configMap
+              name: self
+              key: WAITFORDATABASE
+
+    # A DYNAMIC engine group, disabled by default, the engines are started
+    # on demand by FME Flow.
+    engine-dynamic:
+      enabled: false
+      replicaCount: 0
+      terminationGracePeriodSeconds: 300
+      volumes: *shared-volumes
+      containers:
+        engine:
+          image:
+            repository: safesoftware/fmeflow-engine
+            tag: *fmeflow-version
+            sha: ''
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 200m
+          volumeMounts: *shared-volume-mounts
+          env:
+            <<: [*external-env, *service-names-env, *database-env]
+            COREHOSTNAME:
+              order: 1
+              value: $(SERVICE_CORE_NAME)
+            NODENAME:
+              type: valueFrom
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            ENGINETYPE:
+              value: DYNAMIC
+            ENGINEPROPERTIES:
+              value: dynamic-group
+            NODEMANAGED:
+              type: configMap
+              name: self
+              key: NODEMANAGED
+            ENGINERECEIVETIMEOUT:
+              type: configMap
+              name: self
+              key: ENGINERECEIVETIMEOUT
+            ENGINEDEBUGLEVEL:
+              type: configMap
+              name: self
+              key: ENGINEDEBUGLEVEL
+            WAITFORDATABASE:
+              type: configMap
+              name: self
+              key: WAITFORDATABASE

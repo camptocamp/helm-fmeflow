@@ -1,0 +1,1093 @@
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fmeflow-basic-fmeflow-core
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: core
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-basic
+      app.kubernetes.io/component: core
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fmeflow-basic-fmeflow-engine-standard
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: engine-standard
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-basic
+      app.kubernetes.io/component: engine-standard
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fmeflow-basic-fmeflow-queue
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: queue
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-basic
+      app.kubernetes.io/component: queue
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fmeflow-basic-fmeflow-websocket
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: websocket
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-basic
+      app.kubernetes.io/component: websocket
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/cm_metadata.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fmeflow-basic-fmeflow-metadata
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: main
+data:
+  CHART_NAME: fmeflow
+  RELEASE_NAME: fmeflow-basic
+  RELEASE_NAMESPACE: default
+  SERVICE_CORE_NAME: fmeflow-basic-fmeflow-core
+  SERVICE_CORE_CONTAINER_DBINIT_IMAGE_TAG: "2026.3.1"
+  SERVICE_CORE_CONTAINER_CORE_IMAGE_TAG: "2026.3.1"
+  SERVICE_CORE_CONTAINER_FMEUTILITY_IMAGE_TAG: "2026.3.1"
+  SERVICE_CORE_CONTAINER_WEB_IMAGE_TAG: "2026.3.1"
+  SERVICE_ENGINE-STANDARD_NAME: fmeflow-basic-fmeflow-engine-standard
+  SERVICE_ENGINE-STANDARD_CONTAINER_ENGINE_IMAGE_TAG: "2026.3.1"
+  SERVICE_QUEUE_NAME: fmeflow-basic-fmeflow-queue
+  SERVICE_QUEUE_CONTAINER_QUEUE_IMAGE_TAG: "2026.3.1"
+  SERVICE_WEBSOCKET_NAME: fmeflow-basic-fmeflow-websocket
+  SERVICE_WEBSOCKET_CONTAINER_WEBSOCKET_IMAGE_TAG: "2026.3.1"
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fmeflow-basic-fmeflow
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: main
+data:
+  AZUREPOSTGRESQL: |-
+    false
+  COREDEBUGLEVEL: |-
+    NONE
+  ENABLEDFEATURES: |-
+
+  ENABLETRANSACTIONQUEUETIMEOUT: |-
+    false
+  ENGINEDEBUGLEVEL: |-
+    NONE
+  ENGINERECEIVETIMEOUT: |-
+    0
+  EXTERNALHOSTNAME: |-
+    fme-basic.local
+  EXTERNALPORT: |-
+    443
+  FIRSTLOGINCHANGEPASSWORD: |-
+    true
+  HIDEHOSTCONTENT: |-
+    true
+  HIKARIDBMAXCONNECTIONS: |-
+    30
+  MAINTENANCEIDLEWAIT: |-
+    90
+  MAXTHREADS: |-
+    200
+  NODEMANAGED: |-
+    false
+  PGSQLADMINDATABASE: |-
+    postgres
+  PGSQLADMINUSER: |-
+    postgres
+  PGSQLDATABASENAME: |-
+    fmeflow
+  PGSQLHOSTNAME: |-
+    postgresql.default.svc.cluster.local
+  PGSQLPORT: |-
+    5432
+  PGSQLUSERNAME: |-
+    fmeflow
+  POSTGRESQLSSL: |-
+    false
+  SCHEDULERIDLEWAITTIME: |-
+    5000
+  SHOWPASSWORDLOGINUI: |-
+    true
+  SYSTEMAUTHENTICATIONENABLED: |-
+    true
+  WAITFORDATABASE: |-
+    true
+  WAITFORQUEUE: |-
+    true
+  WEBPROTOCOL: |-
+    https
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/persistentvolumeclaim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fmeflow-basic-fmeflow-data
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fmeflow-basic-fmeflow-core
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: core
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: core
+      port: 7070
+      protocol: TCP
+      targetPort: core
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: web
+  selector:
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: core
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fmeflow-basic-fmeflow-queue
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: queue
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: queue
+  selector:
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: queue
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fmeflow-basic-fmeflow-websocket
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: websocket
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: websocket
+      port: 7078
+      protocol: TCP
+      targetPort: websocket
+  selector:
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: websocket
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fmeflow-basic-fmeflow-engine-standard
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: engine-standard
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-basic
+      app.kubernetes.io/component: engine-standard
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fmeflow
+        app.kubernetes.io/instance: fmeflow-basic
+        app.kubernetes.io/component: engine-standard
+    spec:
+
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1363
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: engine
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-engine:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "ENGINEDEBUGLEVEL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "ENGINEDEBUGLEVEL"
+            - name: "ENGINEPROPERTIES"
+              value: standard-group
+            - name: "ENGINERECEIVETIMEOUT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "ENGINERECEIVETIMEOUT"
+            - name: "ENGINETYPE"
+              value: STANDARD
+            - name: "EXTERNALHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "EXTERNALHOSTNAME"
+            - name: "EXTERNALPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "EXTERNALPORT"
+            - name: "NODEMANAGED"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "NODEMANAGED"
+            - name: "NODENAME"
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLDATABASENAME"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLHOSTNAME"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLPORT"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLUSERNAME"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "SERVICE_CORE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow-metadata
+                  key: "SERVICE_CORE_NAME"
+            - name: "SERVICE_QUEUE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow-metadata
+                  key: "SERVICE_QUEUE_NAME"
+            - name: "WAITFORDATABASE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "WAITFORDATABASE"
+            - name: "WEBPROTOCOL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "WEBPROTOCOL"
+            - name: "COREHOSTNAME"
+              value: $(SERVICE_CORE_NAME)
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  fmePid=$(pidof fme);
+                  jobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                  currentJobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                  while ls -lR /proc/$fmePid 2>&1 | grep -q job_; do
+                    while [ "$jobId" = "$currentJobId" ]
+                    do
+                      currentJobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                      sleep 1;
+                    done
+                    exit
+                  done
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+
+      volumes:
+        - name: fmeflowdata
+          persistentVolumeClaim:
+            claimName: fmeflow-basic-fmeflow-data
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fmeflow-basic-fmeflow-core
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: core
+spec:
+  serviceName: fmeflow-basic-fmeflow-core
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-basic
+      app.kubernetes.io/component: core
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fmeflow
+        app.kubernetes.io/instance: fmeflow-basic
+        app.kubernetes.io/component: core
+    spec:
+
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1363
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - fmeflow
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                      - fmeflow-basic
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - core
+              topologyKey: "kubernetes.io/hostname"
+      initContainers:
+        - name: dbinit
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-core:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "AZUREPOSTGRESQL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "AZUREPOSTGRESQL"
+            - name: "FIRSTLOGINCHANGEPASSWORD"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "FIRSTLOGINCHANGEPASSWORD"
+            - name: "PGSQLADMINDATABASE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLADMINDATABASE"
+            - name: "PGSQLADMINPASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "admin-password"
+            - name: "PGSQLADMINUSER"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLADMINUSER"
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLDATABASENAME"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLHOSTNAME"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLPORT"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLUSERNAME"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "PRIMARY_PROCESS"
+              value: initpgsql
+            - name: "RUNSETUP"
+              value: "true"
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+      containers:
+        - name: core
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-core:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "COREDEBUGLEVEL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "COREDEBUGLEVEL"
+            - name: "COREHOSTNAME"
+              value: localhost
+            - name: "ENABLEDFEATURES"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "ENABLEDFEATURES"
+            - name: "ENABLETRANSACTIONQUEUETIMEOUT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "ENABLETRANSACTIONQUEUETIMEOUT"
+            - name: "EXTERNALHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "EXTERNALHOSTNAME"
+            - name: "EXTERNALPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "EXTERNALPORT"
+            - name: "FIRSTLOGINCHANGEPASSWORD"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "FIRSTLOGINCHANGEPASSWORD"
+            - name: "MAINTENANCEIDLEWAIT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "MAINTENANCEIDLEWAIT"
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLDATABASENAME"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLHOSTNAME"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLPORT"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLUSERNAME"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "PRIMARY_PROCESS"
+              value: core
+            - name: "SCHEDULERIDLEWAITTIME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "SCHEDULERIDLEWAITTIME"
+            - name: "SERVICE_CORE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow-metadata
+                  key: "SERVICE_CORE_NAME"
+            - name: "SERVICE_QUEUE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow-metadata
+                  key: "SERVICE_QUEUE_NAME"
+            - name: "SYSTEMAUTHENTICATIONENABLED"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "SYSTEMAUTHENTICATIONENABLED"
+            - name: "WAITFORDATABASE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "WAITFORDATABASE"
+            - name: "WAITFORQUEUE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "WAITFORQUEUE"
+            - name: "WEBPROTOCOL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "WEBPROTOCOL"
+            - name: "NODENAMENS"
+              value: $(SERVICE_CORE_NAME)
+            - name: "QUEUENAMENS"
+              value: $(SERVICE_QUEUE_NAME)
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1.5Gi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+          ports:
+            - name: core
+              containerPort: 7070
+
+          livenessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /fmeapiv4/healthcheck/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /fmeapiv4/healthcheck/readiness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+          startupProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /fmeapiv4/healthcheck/readiness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+        - name: fmeutility
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-engine:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "COREHOSTNAME"
+              value: localhost
+            - name: "ENGINETYPE"
+              value: UTILITY
+            - name: "EXTERNALHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "EXTERNALHOSTNAME"
+            - name: "EXTERNALPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "EXTERNALPORT"
+            - name: "NODEMANAGED"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "NODEMANAGED"
+            - name: "NODENAME"
+              value: localhost
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLDATABASENAME"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLHOSTNAME"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLPORT"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLUSERNAME"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "WAITFORDATABASE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "WAITFORDATABASE"
+            - name: "WEBPROTOCOL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "WEBPROTOCOL"
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1.5Gi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+        - name: web
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-web:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "COREDEBUGLEVEL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "COREDEBUGLEVEL"
+            - name: "COREHOSTNAME"
+              value: localhost
+            - name: "ENABLEDFEATURES"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "ENABLEDFEATURES"
+            - name: "EXTERNALHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "EXTERNALHOSTNAME"
+            - name: "EXTERNALPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "EXTERNALPORT"
+            - name: "HIDEHOSTCONTENT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "HIDEHOSTCONTENT"
+            - name: "HIKARIDBMAXCONNECTIONS"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "HIKARIDBMAXCONNECTIONS"
+            - name: "MAXTHREADS"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "MAXTHREADS"
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLDATABASENAME"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLHOSTNAME"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "fme-database"
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLPORT"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "PGSQLUSERNAME"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "SERVICE_CORE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow-metadata
+                  key: "SERVICE_CORE_NAME"
+            - name: "SERVICE_QUEUE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow-metadata
+                  key: "SERVICE_QUEUE_NAME"
+            - name: "SHOWPASSWORDLOGINUI"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "SHOWPASSWORDLOGINUI"
+            - name: "SYSTEMAUTHENTICATIONENABLED"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "SYSTEMAUTHENTICATIONENABLED"
+            - name: "WEBPROTOCOL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-basic-fmeflow
+                  key: "WEBPROTOCOL"
+            - name: "NODENAMENS"
+              value: $(SERVICE_CORE_NAME)
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1Gi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+          ports:
+            - name: web
+              containerPort: 8080
+
+          livenessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 60
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /fmeapiv4/healthcheck/readiness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+          startupProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /fmeapiv4/healthcheck/readiness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+
+      volumes:
+        - name: fmeflowdata
+          persistentVolumeClaim:
+            claimName: fmeflow-basic-fmeflow-data
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fmeflow-basic-fmeflow-queue
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: queue
+spec:
+  serviceName: fmeflow-basic-fmeflow-queue
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-basic
+      app.kubernetes.io/component: queue
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fmeflow
+        app.kubernetes.io/instance: fmeflow-basic
+        app.kubernetes.io/component: queue
+    spec:
+
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1363
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - fmeflow
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                      - fmeflow-basic
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - queue
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: queue
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-queue:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "POD_IP"
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+          ports:
+            - name: queue
+              containerPort: 6379
+
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            tcpSocket:
+              port: 6379
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            tcpSocket:
+              port: 6379
+            timeoutSeconds: 1
+
+      volumes:
+        - name: fmeflowdata
+          persistentVolumeClaim:
+            claimName: fmeflow-basic-fmeflow-data
+---
+# Source: fmeflow-basic/charts/fmeflow/charts/fmeflow/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fmeflow-basic-fmeflow-websocket
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-basic
+    app.kubernetes.io/component: websocket
+spec:
+  serviceName: fmeflow-basic-fmeflow-websocket
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-basic
+      app.kubernetes.io/component: websocket
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fmeflow
+        app.kubernetes.io/instance: fmeflow-basic
+        app.kubernetes.io/component: websocket
+    spec:
+
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1363
+      containers:
+        - name: websocket
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-core:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "PRIMARY_PROCESS"
+              value: websocket
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+          ports:
+            - name: websocket
+              containerPort: 7078
+
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            tcpSocket:
+              port: 7078
+            timeoutSeconds: 5
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            tcpSocket:
+              port: 7078
+            timeoutSeconds: 1
+
+      volumes:
+        - name: fmeflowdata
+          persistentVolumeClaim:
+            claimName: fmeflow-basic-fmeflow-data

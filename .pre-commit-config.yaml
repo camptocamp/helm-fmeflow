@@ -1,0 +1,117 @@
+# https://pre-commit.com/hooks.html
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: detect-private-key
+      - id: check-merge-conflict
+      - id: check-ast
+      - id: debug-statements
+      - id: check-toml
+      - id: check-yaml
+        exclude: |-
+          (?x)^(
+            tests/expected-.+\.yaml
+          )$
+        args:
+          - --allow-multiple-documents
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+  - repo: https://github.com/sbrunner/hooks
+    rev: 1.8.0
+    hooks:
+      - id: copyright
+      - id: workflows-require-timeout
+      - id: canonicalize
+  - repo: https://github.com/camptocamp/helm-common
+    rev: 2.1.2
+    hooks:
+      - id: helm-template-gen
+        files: |-
+          (?x)(
+            ^values\.yaml$
+            |^Chart\.yaml$
+            |^examples/basic/.*
+          )
+        args:
+          - --namespace=default
+          - fmeflow-basic
+          - examples/basic
+          - tests/expected-basic.yaml
+      - id: helm-template-gen
+        files: |-
+          (?x)(
+            ^values\.yaml$
+            |^Chart\.yaml$
+            |^examples/external-db-traefik/.*
+          )
+        args:
+          - --namespace=default
+          - fmeflow-external-db-traefik
+          - examples/external-db-traefik
+          - tests/expected-external-db-traefik.yaml
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3
+    hooks:
+      - id: codespell
+        exclude: |-
+          (?x)^(
+            tests/expected-.+\.yaml
+          )$
+        args:
+          - --ignore-words=.github/spell-ignore-words.txt
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - prettier@3.9.9 # npm
+          - prettier-plugin-sh@0.20.2 # npm
+          - prettier-plugin-toml@2.0.6 # npm
+          - '@prettier/plugin-xml@0.12.0' # npm
+        exclude: |-
+          (?x)^(
+            tests/expected-.+\.yaml
+            |examples/README\.md
+          )$
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: 3.0.0
+    hooks:
+      - id: git-check
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.38.2
+    hooks:
+      - id: check-github-actions
+      - id: check-github-workflows
+      - id: check-jsonschema
+        name: Check GitHub Workflows set timeout-minutes
+        files: ^\.github/workflows/[^/]+$
+        types:
+          - yaml
+        args:
+          - --builtin-schema
+          - github-workflows-require-timeout
+  - repo: https://github.com/sirwart/ripsecrets
+    rev: v0.1.11
+    hooks:
+      - id: ripsecrets
+  - repo: https://github.com/sbrunner/jsonschema-validator
+    rev: 1.0.0
+    hooks:
+      - id: jsonschema-validator
+        files: |-
+          (?x)^(
+            \.github/ghci\.yaml
+            |\.github/publish\.yaml
+          )$
+  - repo: https://github.com/renovatebot/pre-commit-hooks
+    rev: 44.115.4
+    hooks:
+      - id: renovate-config-validator

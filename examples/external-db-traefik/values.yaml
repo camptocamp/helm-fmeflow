@@ -1,0 +1,71 @@
+fmeflow:
+  fmeflow:
+    global:
+      image:
+        pullSecrets:
+          - name: my-docker-registry
+
+    configMaps:
+      content:
+        EXTERNALHOSTNAME:
+          value: fme-test.example.com
+        PGSQLHOSTNAME:
+          value: pg.example.com
+        PGSQLDATABASENAME:
+          value: fmeflow
+        PGSQLUSERNAME:
+          value: fmeflow
+        POSTGRESQLSSL:
+          value: 'true'
+
+    # The database passwords are read from an existing Secret, created for
+    # example with an ExternalSecret:
+    #
+    # kubectl create secret generic fme-database \
+    #   --from-literal=password=... --from-literal=admin-password=...
+
+    persistentVolumeClaims:
+      data:
+        spec:
+          accessModes:
+            - ReadWriteMany
+          storageClassName: azurefile-csi
+          resources:
+            requests:
+              storage: 80Gi
+
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        traefik.ingress.kubernetes.io/router.tls: 'true'
+      hostGroups:
+        main:
+          hosts:
+            - fme-test.example.com
+          tls:
+            enabled: true
+            secretName: fme-tls
+
+    services:
+      core:
+        ingress:
+          enabled: true
+      websocket:
+        ingress:
+          enabled: true
+
+      # An extra shared volume mounted in all the components, for example a
+      # Secret with the SMTP configuration:
+      #
+      # core:
+      #   volumes:
+      #     email-data:
+      #       secret:
+      #         secretName: fme-email
+      #   containers:
+      #     core:
+      #       volumeMounts:
+      #         /email:
+      #           name: email-data
