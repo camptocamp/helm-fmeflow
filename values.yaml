@@ -29,7 +29,7 @@ fmeflow-version: &fmeflow-version '2026.3.1'
 
 database-secret: &database-secret
   type: secret
-  name: fme-database
+  name: self-external-secret-database
 
 shared-volumes: &shared-volumes
   fmeflowdata:
@@ -134,11 +134,9 @@ fmeflow:
 
   # The deployment wide configuration, injected as environment variables in
   # the containers. The database connection and credentials are not here,
-  # they are read from a Secret (fme-database by default) with the keys:
-  # hostname, port, database, username, password, admin-username,
-  # admin-password, admin-database (see the README for an ExternalSecret
-  # example). On Azure Database for PostgreSQL the username must be
-  # `<user>@<host>` and AZUREPOSTGRESQL must be set to 'true'.
+  # they are read from the database Secret (see the externalSecrets section
+  # below and the README). On Azure Database for PostgreSQL the username must
+  # be `<user>@<host>` and AZUREPOSTGRESQL must be set to 'true'.
   configMaps:
     content:
       EXTERNALHOSTNAME:
@@ -183,6 +181,45 @@ fmeflow:
         value: '0'
       HIDEHOSTCONTENT:
         value: 'true'
+
+  # The database ExternalSecret, disabled by default. Enable it and set your
+  # SecretStore and remote references, the target Secret name is generated
+  # from the release name and the PGSQL* environment variables of the
+  # containers are automatically linked to it (self-external-secret-database).
+  # If you prefer to manage the Secret yourself, create it with the name
+  # referenced by the PGSQL* environment variables (see the README).
+  externalSecrets:
+    database:
+      enabled: false
+      refreshInterval: 1h
+      # secretStoreRef:
+      #   kind: SecretStore
+      #   name: my-secret-store
+      data:
+        hostname:
+          remoteRef:
+            key: my-pg-host
+        port:
+          remoteRef:
+            key: my-pg-port
+        database:
+          remoteRef:
+            key: my-fmeflow-database
+        username:
+          remoteRef:
+            key: my-fmeflow-username
+        password:
+          remoteRef:
+            key: my-fmeflow-password
+        admin-username:
+          remoteRef:
+            key: my-admin-username
+        admin-password:
+          remoteRef:
+            key: my-admin-password
+        admin-database:
+          remoteRef:
+            key: my-admin-database
 
   # The FME Flow system share, it must be shared (ReadWriteMany) by all the
   # components when they can run on different nodes. Use fullnameOverride to

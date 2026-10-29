@@ -12,19 +12,40 @@ fmeflow:
         POSTGRESQLSSL:
           value: 'true'
 
-    # The database connection and credentials are read from an existing
-    # Secret (fme-database by default), created for example with an
-    # ExternalSecret:
-    #
-    # kubectl create secret generic fme-database \
-    #   --from-literal=hostname=pg.example.com \
-    #   --from-literal=port=5432 \
-    #   --from-literal=database=fmeflow \
-    #   --from-literal=username=fmeflow \
-    #   --from-literal=password=... \
-    #   --from-literal=admin-username=postgres \
-    #   --from-literal=admin-password=... \
-    #   --from-literal=admin-database=postgres
+    # The database connection and credentials come from the ExternalSecret
+    # rendered by the chart, the PGSQL* environment variables of the
+    # containers are automatically linked to its target Secret.
+    externalSecrets:
+      database:
+        enabled: true
+        secretStoreRef:
+          kind: SecretStore
+          name: my-secret-store
+        data:
+          hostname:
+            remoteRef:
+              key: pg-host
+          port:
+            remoteRef:
+              key: pg-port
+          database:
+            remoteRef:
+              key: fmeflow-database
+          username:
+            remoteRef:
+              key: fmeflow-username
+          password:
+            remoteRef:
+              key: fmeflow-password
+          admin-username:
+            remoteRef:
+              key: fmeflow-username
+          admin-password:
+            remoteRef:
+              key: fmeflow-password
+          admin-database:
+            remoteRef:
+              key: fmeflow-database
 
     persistentVolumeClaims:
       data:

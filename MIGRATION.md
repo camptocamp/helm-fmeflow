@@ -96,15 +96,22 @@ fmeflow:
             secretName: fmeflow-tls # The name used by the Safe Software chart
 ```
 
-The database Secret (for example created by an ExternalSecret in the application
-chart) is not managed by this chart: give it the name expected by the chart
-(`fme-database` by default) with the keys listed in the README (`hostname`,
-`port`, `database`, `username`, `password`, `admin-username`, `admin-password`,
-`admin-database`), or override the `PGSQL*` environment variables of the
-containers to use your own names and keys. With an ExternalSecret, adding the
-missing keys to the existing resource is enough, the remote references can be
-shared between the keys (for example `admin-username` and `username` pointing
-to the same remote key).
+The database Secret is not managed by the Safe Software chart either (it is
+often created by an ExternalSecret in the application chart). Two options:
+
+- **Recommended**: move the remote references of the existing ExternalSecret
+  into the chart configuration (`fmeflow.fmeflow.externalSecrets.database`,
+  see the README), the chart renders its own ExternalSecret and links the
+  `PGSQL*` environment variables to its generated target Secret. The old
+  Secret becomes orphaned and can be deleted once the migration is validated.
+- Keep the ExternalSecret in the application chart and override the `name`
+  (and `key`) of the `PGSQL*` environment variables of the containers, they
+  default to the chart ExternalSecret target
+  (`self-external-secret-database`). The Secret must provide the keys listed
+  in the README (`hostname`, `port`, `database`, `username`, `password`,
+  `admin-username`, `admin-password`, `admin-database`), the remote
+  references can be shared between the keys (for example `admin-username`
+  and `username` pointing to the same remote key).
 
 ## After the migration
 

@@ -341,27 +341,32 @@ spec:
             - name: "PGSQLDATABASENAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
@@ -495,42 +500,50 @@ spec:
             - name: "PGSQLADMINDATABASE"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "admin-database"
             - name: "PGSQLADMINPASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "admin-password"
             - name: "PGSQLADMINUSER"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "admin-username"
             - name: "PGSQLDATABASENAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
@@ -597,27 +610,32 @@ spec:
             - name: "PGSQLDATABASENAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
@@ -732,27 +750,32 @@ spec:
             - name: "PGSQLDATABASENAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
@@ -824,27 +847,32 @@ spec:
             - name: "PGSQLDATABASENAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "database"
             - name: "PGSQLHOSTNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "hostname"
             - name: "PGSQLPASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "password"
             - name: "PGSQLPORT"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "port"
             - name: "PGSQLUSERNAME"
               valueFrom:
                 secretKeyRef:
-                  name: "fme-database"
+
+                  name: fmeflow-external-db-fmeflow-database
                   key: "username"
             - name: "POSTGRESQLSSL"
               valueFrom:
@@ -1129,3 +1157,48 @@ spec:
                 name: fmeflow-external-db-fmeflow-websocket
                 port:
                   number: 7078
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/external-secret.yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: fmeflow-external-db-fmeflow-database
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: database
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: SecretStore
+    name: my-secret-store
+  target:
+    name: fmeflow-external-db-fmeflow-database
+  data:
+    - secretKey: admin-database
+      remoteRef:
+        key: fmeflow-database
+    - secretKey: admin-password
+      remoteRef:
+        key: fmeflow-password
+    - secretKey: admin-username
+      remoteRef:
+        key: fmeflow-username
+    - secretKey: database
+      remoteRef:
+        key: fmeflow-database
+    - secretKey: hostname
+      remoteRef:
+        key: pg-host
+    - secretKey: password
+      remoteRef:
+        key: fmeflow-password
+    - secretKey: port
+      remoteRef:
+        key: pg-port
+    - secretKey: username
+      remoteRef:
+        key: fmeflow-username

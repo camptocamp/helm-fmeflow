@@ -112,8 +112,7 @@ fmeflow:
 
 ### Database
 
-The database connection and credentials are read from a Secret, `fme-database`
-by default, with these keys:
+The database connection and credentials are read from a Secret with these keys:
 
 | Key              | Environment variable | Used by                    |
 | ---------------- | -------------------- | -------------------------- |
@@ -126,51 +125,56 @@ by default, with these keys:
 | `admin-password` | `PGSQLADMINPASSWORD` | the `dbinit` initContainer |
 | `admin-database` | `PGSQLADMINDATABASE` | the `dbinit` initContainer |
 
-Create it with an ExternalSecret (recommended, the secret never lives in Git),
-for example:
+**Recommended**: enable the ExternalSecret rendered by the chart, its target
+Secret name is generated from the release name and the `PGSQL*` environment
+variables are automatically linked to it (`self-external-secret-database`):
 
 ```yaml
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: fme-database
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    kind: SecretStore
-    name: my-secret-store
-  target:
-    name: fme-database
-  data:
-    - secretKey: hostname
-      remoteRef:
-        key: my-pg-host
-    - secretKey: port
-      remoteRef:
-        key: my-pg-port
-    - secretKey: database
-      remoteRef:
-        key: my-fmeflow-database
-    - secretKey: username
-      remoteRef:
-        key: my-fmeflow-username
-    - secretKey: password
-      remoteRef:
-        key: my-fmeflow-password
-    - secretKey: admin-username
-      remoteRef:
-        key: my-admin-username
-    - secretKey: admin-password
-      remoteRef:
-        key: my-admin-password
-    - secretKey: admin-database
-      remoteRef:
-        key: my-admin-database
+fmeflow:
+  fmeflow:
+    externalSecrets:
+      database:
+        enabled: true
+        refreshInterval: 1h
+        secretStoreRef:
+          kind: SecretStore
+          name: my-secret-store
+        data:
+          hostname:
+            remoteRef:
+              key: my-pg-host
+          port:
+            remoteRef:
+              key: my-pg-port
+          database:
+            remoteRef:
+              key: my-fmeflow-database
+          username:
+            remoteRef:
+              key: my-fmeflow-username
+          password:
+            remoteRef:
+              key: my-fmeflow-password
+          admin-username:
+            remoteRef:
+              key: my-admin-username
+          admin-password:
+            remoteRef:
+              key: my-admin-password
+          admin-database:
+            remoteRef:
+              key: my-admin-database
 ```
 
-To use another Secret, override the `PGSQL*` environment variables of the
-containers (`type: secret`, `name`, `key`), they all default to the
-`fme-database` Secret.
+The remote references can be shared between the keys (for example
+`admin-username` and `username` pointing to the same remote key), see the
+[external-db-traefik example](examples/external-db-traefik/values.yaml).
+
+**Alternative**: manage the Secret yourself (an ExternalSecret in your own
+chart, a SealedSecret, ...), and override the `name` of the `PGSQL*`
+environment variables (`type: secret`) in the containers that use them:
+`core`, `web`, `fmeutility` and `dbinit` (plus the `admin-*` keys for
+`dbinit`), and every engine service.
 
 ### Storage
 
