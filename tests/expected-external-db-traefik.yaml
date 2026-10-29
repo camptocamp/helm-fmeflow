@@ -1,0 +1,1204 @@
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fmeflow-external-db-fmeflow-core
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: core
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-external-db-traefik
+      app.kubernetes.io/component: core
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fmeflow-external-db-fmeflow-engine-standard
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: engine-standard
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-external-db-traefik
+      app.kubernetes.io/component: engine-standard
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fmeflow-external-db-fmeflow-queue
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: queue
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-external-db-traefik
+      app.kubernetes.io/component: queue
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fmeflow-external-db-fmeflow-websocket
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: websocket
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-external-db-traefik
+      app.kubernetes.io/component: websocket
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/cm_metadata.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fmeflow-external-db-fmeflow-metadata
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: main
+data:
+  CHART_NAME: fmeflow
+  RELEASE_NAME: fmeflow-external-db-traefik
+  RELEASE_NAMESPACE: default
+  SERVICE_CORE_NAME: fmeflow-external-db-fmeflow-core
+  SERVICE_CORE_CONTAINER_DBINIT_IMAGE_TAG: "2026.3.1"
+  SERVICE_CORE_CONTAINER_CORE_IMAGE_TAG: "2026.3.1"
+  SERVICE_CORE_CONTAINER_FMEUTILITY_IMAGE_TAG: "2026.3.1"
+  SERVICE_CORE_CONTAINER_WEB_IMAGE_TAG: "2026.3.1"
+  SERVICE_ENGINE-STANDARD_NAME: fmeflow-external-db-fmeflow-engine-standard
+  SERVICE_ENGINE-STANDARD_CONTAINER_ENGINE_IMAGE_TAG: "2026.3.1"
+  SERVICE_QUEUE_NAME: fmeflow-external-db-fmeflow-queue
+  SERVICE_QUEUE_CONTAINER_QUEUE_IMAGE_TAG: "2026.3.1"
+  SERVICE_WEBSOCKET_NAME: fmeflow-external-db-fmeflow-websocket
+  SERVICE_WEBSOCKET_CONTAINER_WEBSOCKET_IMAGE_TAG: "2026.3.1"
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fmeflow-external-db-fmeflow
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: main
+data:
+  AZUREPOSTGRESQL: |-
+    false
+  COREDEBUGLEVEL: |-
+    NONE
+  ENABLEDFEATURES: |-
+
+  ENABLETRANSACTIONQUEUETIMEOUT: |-
+    false
+  ENGINEDEBUGLEVEL: |-
+    NONE
+  ENGINERECEIVETIMEOUT: |-
+    0
+  EXTERNALHOSTNAME: |-
+    fme-test.example.com
+  EXTERNALPORT: |-
+    443
+  FIRSTLOGINCHANGEPASSWORD: |-
+    true
+  HIDEHOSTCONTENT: |-
+    true
+  HIKARIDBMAXCONNECTIONS: |-
+    30
+  MAINTENANCEIDLEWAIT: |-
+    90
+  MAXTHREADS: |-
+    200
+  NODEMANAGED: |-
+    false
+  POSTGRESQLSSL: |-
+    true
+  SCHEDULERIDLEWAITTIME: |-
+    5000
+  SHOWPASSWORDLOGINUI: |-
+    true
+  SYSTEMAUTHENTICATIONENABLED: |-
+    true
+  WAITFORDATABASE: |-
+    true
+  WAITFORQUEUE: |-
+    true
+  WEBPROTOCOL: |-
+    https
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/persistentvolumeclaim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fmeflow-external-db-fmeflow-data
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: data
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 80Gi
+  storageClassName: azurefile-csi
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fmeflow-external-db-fmeflow-core
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: core
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: core
+      port: 7070
+      protocol: TCP
+      targetPort: core
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: web
+  selector:
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: core
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fmeflow-external-db-fmeflow-queue
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: queue
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: queue
+  selector:
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: queue
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fmeflow-external-db-fmeflow-websocket
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: websocket
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: websocket
+      port: 7078
+      protocol: TCP
+      targetPort: websocket
+  selector:
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: websocket
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fmeflow-external-db-fmeflow-engine-standard
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: engine-standard
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-external-db-traefik
+      app.kubernetes.io/component: engine-standard
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fmeflow
+        app.kubernetes.io/instance: fmeflow-external-db-traefik
+        app.kubernetes.io/component: engine-standard
+    spec:
+
+      imagePullSecrets:
+        - name: my-docker-registry
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1363
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: engine
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-engine:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "ENGINEDEBUGLEVEL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "ENGINEDEBUGLEVEL"
+            - name: "ENGINEPROPERTIES"
+              value: standard-group
+            - name: "ENGINERECEIVETIMEOUT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "ENGINERECEIVETIMEOUT"
+            - name: "ENGINETYPE"
+              value: STANDARD
+            - name: "EXTERNALHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "EXTERNALHOSTNAME"
+            - name: "EXTERNALPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "EXTERNALPORT"
+            - name: "NODEMANAGED"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "NODEMANAGED"
+            - name: "NODENAME"
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "database"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "hostname"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "port"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "username"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "SERVICE_CORE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow-metadata
+                  key: "SERVICE_CORE_NAME"
+            - name: "SERVICE_QUEUE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow-metadata
+                  key: "SERVICE_QUEUE_NAME"
+            - name: "WAITFORDATABASE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "WAITFORDATABASE"
+            - name: "WEBPROTOCOL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "WEBPROTOCOL"
+            - name: "COREHOSTNAME"
+              value: $(SERVICE_CORE_NAME)
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  fmePid=$(pidof fme);
+                  jobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                  currentJobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                  while ls -lR /proc/$fmePid 2>&1 | grep -q job_; do
+                    while [ "$jobId" = "$currentJobId" ]
+                    do
+                      currentJobId=$(ls -lR /proc/ 2>&1 | grep -oP "job_\d+" | sed -n '1p');
+                      sleep 1;
+                    done
+                    exit
+                  done
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+
+      volumes:
+        - name: fmeflowdata
+          persistentVolumeClaim:
+            claimName: fmeflow-external-db-fmeflow-data
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fmeflow-external-db-fmeflow-core
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: core
+spec:
+  serviceName: fmeflow-external-db-fmeflow-core
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-external-db-traefik
+      app.kubernetes.io/component: core
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fmeflow
+        app.kubernetes.io/instance: fmeflow-external-db-traefik
+        app.kubernetes.io/component: core
+    spec:
+
+      imagePullSecrets:
+        - name: my-docker-registry
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1363
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - fmeflow
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                      - fmeflow-external-db-traefik
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - core
+              topologyKey: "kubernetes.io/hostname"
+      initContainers:
+        - name: dbinit
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-core:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "AZUREPOSTGRESQL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "AZUREPOSTGRESQL"
+            - name: "FIRSTLOGINCHANGEPASSWORD"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "FIRSTLOGINCHANGEPASSWORD"
+            - name: "PGSQLADMINDATABASE"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "admin-database"
+            - name: "PGSQLADMINPASSWORD"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "admin-password"
+            - name: "PGSQLADMINUSER"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "admin-username"
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "database"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "hostname"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "port"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "username"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "PRIMARY_PROCESS"
+              value: initpgsql
+            - name: "RUNSETUP"
+              value: "true"
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+      containers:
+        - name: core
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-core:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "COREDEBUGLEVEL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "COREDEBUGLEVEL"
+            - name: "COREHOSTNAME"
+              value: localhost
+            - name: "ENABLEDFEATURES"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "ENABLEDFEATURES"
+            - name: "ENABLETRANSACTIONQUEUETIMEOUT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "ENABLETRANSACTIONQUEUETIMEOUT"
+            - name: "EXTERNALHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "EXTERNALHOSTNAME"
+            - name: "EXTERNALPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "EXTERNALPORT"
+            - name: "FIRSTLOGINCHANGEPASSWORD"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "FIRSTLOGINCHANGEPASSWORD"
+            - name: "MAINTENANCEIDLEWAIT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "MAINTENANCEIDLEWAIT"
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "database"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "hostname"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "port"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "username"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "PRIMARY_PROCESS"
+              value: core
+            - name: "SCHEDULERIDLEWAITTIME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "SCHEDULERIDLEWAITTIME"
+            - name: "SERVICE_CORE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow-metadata
+                  key: "SERVICE_CORE_NAME"
+            - name: "SERVICE_QUEUE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow-metadata
+                  key: "SERVICE_QUEUE_NAME"
+            - name: "SYSTEMAUTHENTICATIONENABLED"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "SYSTEMAUTHENTICATIONENABLED"
+            - name: "WAITFORDATABASE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "WAITFORDATABASE"
+            - name: "WAITFORQUEUE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "WAITFORQUEUE"
+            - name: "WEBPROTOCOL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "WEBPROTOCOL"
+            - name: "NODENAMENS"
+              value: $(SERVICE_CORE_NAME)
+            - name: "QUEUENAMENS"
+              value: $(SERVICE_QUEUE_NAME)
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1.5Gi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+          ports:
+            - name: core
+              containerPort: 7070
+
+          livenessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /fmeapiv4/healthcheck/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /fmeapiv4/healthcheck/readiness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+          startupProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /fmeapiv4/healthcheck/readiness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+        - name: fmeutility
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-engine:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "COREHOSTNAME"
+              value: localhost
+            - name: "ENGINETYPE"
+              value: UTILITY
+            - name: "EXTERNALHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "EXTERNALHOSTNAME"
+            - name: "EXTERNALPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "EXTERNALPORT"
+            - name: "NODEMANAGED"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "NODEMANAGED"
+            - name: "NODENAME"
+              value: localhost
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "database"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "hostname"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "port"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "username"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "WAITFORDATABASE"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "WAITFORDATABASE"
+            - name: "WEBPROTOCOL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "WEBPROTOCOL"
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1.5Gi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+        - name: web
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-web:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "COREDEBUGLEVEL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "COREDEBUGLEVEL"
+            - name: "COREHOSTNAME"
+              value: localhost
+            - name: "ENABLEDFEATURES"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "ENABLEDFEATURES"
+            - name: "EXTERNALHOSTNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "EXTERNALHOSTNAME"
+            - name: "EXTERNALPORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "EXTERNALPORT"
+            - name: "HIDEHOSTCONTENT"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "HIDEHOSTCONTENT"
+            - name: "HIKARIDBMAXCONNECTIONS"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "HIKARIDBMAXCONNECTIONS"
+            - name: "MAXTHREADS"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "MAXTHREADS"
+            - name: "PGSQLDATABASENAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "database"
+            - name: "PGSQLHOSTNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "hostname"
+            - name: "PGSQLPASSWORD"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "password"
+            - name: "PGSQLPORT"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "port"
+            - name: "PGSQLUSERNAME"
+              valueFrom:
+                secretKeyRef:
+
+                  name: fmeflow-external-db-fmeflow-database
+                  key: "username"
+            - name: "POSTGRESQLSSL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "POSTGRESQLSSL"
+            - name: "SERVICE_CORE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow-metadata
+                  key: "SERVICE_CORE_NAME"
+            - name: "SERVICE_QUEUE_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow-metadata
+                  key: "SERVICE_QUEUE_NAME"
+            - name: "SHOWPASSWORDLOGINUI"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "SHOWPASSWORDLOGINUI"
+            - name: "SYSTEMAUTHENTICATIONENABLED"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "SYSTEMAUTHENTICATIONENABLED"
+            - name: "WEBPROTOCOL"
+              valueFrom:
+                configMapKeyRef:
+                  name: fmeflow-external-db-fmeflow
+                  key: "WEBPROTOCOL"
+            - name: "NODENAMENS"
+              value: $(SERVICE_CORE_NAME)
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1Gi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+          ports:
+            - name: web
+              containerPort: 8080
+
+          livenessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 60
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /fmeapiv4/healthcheck/readiness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+          startupProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /fmeapiv4/healthcheck/readiness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+
+      volumes:
+        - name: fmeflowdata
+          persistentVolumeClaim:
+            claimName: fmeflow-external-db-fmeflow-data
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fmeflow-external-db-fmeflow-queue
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: queue
+spec:
+  serviceName: fmeflow-external-db-fmeflow-queue
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-external-db-traefik
+      app.kubernetes.io/component: queue
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fmeflow
+        app.kubernetes.io/instance: fmeflow-external-db-traefik
+        app.kubernetes.io/component: queue
+    spec:
+
+      imagePullSecrets:
+        - name: my-docker-registry
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1363
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - fmeflow
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                      - fmeflow-external-db-traefik
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - queue
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: queue
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-queue:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "POD_IP"
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+          ports:
+            - name: queue
+              containerPort: 6379
+
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            tcpSocket:
+              port: 6379
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            tcpSocket:
+              port: 6379
+            timeoutSeconds: 1
+
+      volumes:
+        - name: fmeflowdata
+          persistentVolumeClaim:
+            claimName: fmeflow-external-db-fmeflow-data
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fmeflow-external-db-fmeflow-websocket
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: websocket
+spec:
+  serviceName: fmeflow-external-db-fmeflow-websocket
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fmeflow
+      app.kubernetes.io/instance: fmeflow-external-db-traefik
+      app.kubernetes.io/component: websocket
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fmeflow
+        app.kubernetes.io/instance: fmeflow-external-db-traefik
+        app.kubernetes.io/component: websocket
+    spec:
+
+      imagePullSecrets:
+        - name: my-docker-registry
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1363
+      containers:
+        - name: websocket
+          securityContext:
+            {}
+          image: "safesoftware/fmeflow-core:2026.3.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "PRIMARY_PROCESS"
+              value: websocket
+          terminationMessagePolicy: FallbackToLogsOnError
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /data/fmeflowdata
+              name: fmeflowdata
+
+          ports:
+            - name: websocket
+              containerPort: 7078
+
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            tcpSocket:
+              port: 7078
+            timeoutSeconds: 5
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            tcpSocket:
+              port: 7078
+            timeoutSeconds: 1
+
+      volumes:
+        - name: fmeflowdata
+          persistentVolumeClaim:
+            claimName: fmeflow-external-db-fmeflow-data
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fmeflow-external-db-fmeflow-main
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: main
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  ingressClassName: traefik
+# Add tls only if ingress.tls.enabled is set to true and the other fields are complete.
+  tls:
+    - hosts:
+        - "fme-test.example.com"
+      secretName: fme-tls
+  rules:
+    - host: "fme-test.example.com"
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: fmeflow-external-db-fmeflow-core
+                port:
+                  number: 8080
+          - path: "/websocket"
+            pathType: Prefix
+            backend:
+              service:
+                name: fmeflow-external-db-fmeflow-websocket
+                port:
+                  number: 7078
+---
+# Source: fmeflow-external-db-traefik/charts/fmeflow/charts/fmeflow/templates/external-secret.yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: fmeflow-external-db-fmeflow-database
+  labels:
+    helm.sh/chart: fmeflow
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fmeflow
+    app.kubernetes.io/instance: fmeflow-external-db-traefik
+    app.kubernetes.io/component: database
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: SecretStore
+    name: my-secret-store
+  target:
+    name: fmeflow-external-db-fmeflow-database
+  data:
+    - secretKey: admin-database
+      remoteRef:
+        key: fmeflow-database
+    - secretKey: admin-password
+      remoteRef:
+        key: fmeflow-password
+    - secretKey: admin-username
+      remoteRef:
+        key: fmeflow-username
+    - secretKey: database
+      remoteRef:
+        key: fmeflow-database
+    - secretKey: hostname
+      remoteRef:
+        key: pg-host
+    - secretKey: password
+      remoteRef:
+        key: fmeflow-password
+    - secretKey: port
+      remoteRef:
+        key: pg-port
+    - secretKey: username
+      remoteRef:
+        key: fmeflow-username

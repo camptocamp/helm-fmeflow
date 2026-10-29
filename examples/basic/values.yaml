@@ -1,0 +1,6 @@
+fme:
+  fmeflow:
+    configMaps:
+      content:
+        EXTERNALHOSTNAME:
+          value: fme-basic.local
