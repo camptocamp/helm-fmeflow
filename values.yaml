@@ -258,6 +258,10 @@ fmeflow:
   services:
     core:
       type: StatefulSet
+      # FME Flow resolves its components at the hardcoded pod names
+      # <service>-<index> under the service name, so the workloads cannot carry
+      # the release prefix built by common.fullname.
+      workloadNameOverride: core
       replicaCount: 1
       affinity:
         podAntiAffinity:
@@ -463,6 +467,7 @@ fmeflow:
 
     queue:
       type: StatefulSet
+      workloadNameOverride: queue
       replicaCount: 1
       affinity:
         podAntiAffinity:
@@ -516,6 +521,7 @@ fmeflow:
 
     websocket:
       type: StatefulSet
+      workloadNameOverride: websocket
       replicaCount: 1
       volumes: *shared-volumes
       service:

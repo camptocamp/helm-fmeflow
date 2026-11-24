@@ -432,7 +432,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: fmeflow-external-db-fmeflow-core
+  name: core
   labels:
     helm.sh/chart: fmeflow
     app.kubernetes.io/version: "1.0"
@@ -951,7 +951,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: fmeflow-external-db-fmeflow-queue
+  name: queue
   labels:
     helm.sh/chart: fmeflow
     app.kubernetes.io/version: "1.0"
@@ -1047,7 +1047,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: fmeflow-external-db-fmeflow-websocket
+  name: websocket
   labels:
     helm.sh/chart: fmeflow
     app.kubernetes.io/version: "1.0"
