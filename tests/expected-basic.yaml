@@ -475,6 +475,8 @@ spec:
                     values:
                       - core
               topologyKey: "kubernetes.io/hostname"
+      hostname: core-0
+      subdomain: fmeflow-basic-fmeflow-core
       initContainers:
         - name: dbinit
           securityContext:
@@ -992,6 +994,8 @@ spec:
                     values:
                       - queue
               topologyKey: "kubernetes.io/hostname"
+      hostname: queue-0
+      subdomain: fmeflow-basic-fmeflow-queue
       containers:
         - name: queue
           securityContext:
@@ -1068,6 +1072,8 @@ spec:
       serviceAccountName: default
       securityContext:
         fsGroup: 1363
+      hostname: websocket-0
+      subdomain: fmeflow-basic-fmeflow-websocket
       containers:
         - name: websocket
           securityContext:

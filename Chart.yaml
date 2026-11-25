@@ -6,4 +6,4 @@ dependencies:
   - name: application
     repository: https://camptocamp.github.io/helm-application/
     alias: fmeflow
-    version: 2.23.0
+    version: 2.24.0
