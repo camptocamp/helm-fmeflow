@@ -432,7 +432,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: fmeflow-external-db-fmeflow-core
+  name: core
   labels:
     helm.sh/chart: fmeflow
     app.kubernetes.io/version: "1.0"
@@ -480,8 +480,6 @@ spec:
                     values:
                       - core
               topologyKey: "kubernetes.io/hostname"
-      hostname: core-0
-      subdomain: fmeflow-external-db-fmeflow-core
       initContainers:
         - name: dbinit
           securityContext:
@@ -953,7 +951,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: fmeflow-external-db-fmeflow-queue
+  name: queue
   labels:
     helm.sh/chart: fmeflow
     app.kubernetes.io/version: "1.0"
@@ -1001,8 +999,6 @@ spec:
                     values:
                       - queue
               topologyKey: "kubernetes.io/hostname"
-      hostname: queue-0
-      subdomain: fmeflow-external-db-fmeflow-queue
       containers:
         - name: queue
           securityContext:
@@ -1051,7 +1047,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: fmeflow-external-db-fmeflow-websocket
+  name: websocket
   labels:
     helm.sh/chart: fmeflow
     app.kubernetes.io/version: "1.0"
@@ -1081,8 +1077,6 @@ spec:
       serviceAccountName: default
       securityContext:
         fsGroup: 1363
-      hostname: websocket-0
-      subdomain: fmeflow-external-db-fmeflow-websocket
       containers:
         - name: websocket
           securityContext:

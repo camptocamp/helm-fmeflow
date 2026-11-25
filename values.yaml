@@ -260,11 +260,11 @@ fmeflow:
       type: StatefulSet
       # FME Flow resolves its components at the hardcoded pod DNS names
       # core-<index> / queue-<index> / websocket-<index> under the headless
-      # service name, that the StatefulSet name cannot provide with the release
-      # prefix built by common.fullname. Registering those names with the pod
-      # hostname and subdomain keeps the workload names untouched and requires
-      # one replica per component.
-      hostname: core-0
+      # service name. The pod hostname and subdomain fields cannot provide
+      # those names: the StatefulSet controller overwrites them with the
+      # ordinal pod name and spec.serviceName, so the only way is to name the
+      # workloads without the release prefix, like the Safe Software chart did.
+      workloadNameOverride: core
       replicaCount: 1
       affinity:
         podAntiAffinity:
@@ -470,7 +470,7 @@ fmeflow:
 
     queue:
       type: StatefulSet
-      hostname: queue-0
+      workloadNameOverride: queue
       replicaCount: 1
       affinity:
         podAntiAffinity:
@@ -524,7 +524,7 @@ fmeflow:
 
     websocket:
       type: StatefulSet
-      hostname: websocket-0
+      workloadNameOverride: websocket
       replicaCount: 1
       volumes: *shared-volumes
       service:
