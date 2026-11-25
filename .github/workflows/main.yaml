@@ -111,8 +111,14 @@ jobs:
           curl https://raw.githubusercontent.com/external-secrets/external-secrets/v0.16.1/deploy/crds/bundle.yaml --output /tmp/external-secrets-crd.yaml
           kubectl apply --server-side -f /tmp/external-secrets-crd.yaml
 
+      # The core, queue and websocket StatefulSets carry the bare names FME Flow
+      # expects, so the two examples cannot coexist in one namespace.
       - name: Apply
-        run: kubectl apply --filename=tests/expected-basic.yaml --filename=tests/expected-external-db-traefik.yaml
+        run: |
+          kubectl create namespace fmeflow-basic
+          kubectl create namespace fmeflow-external-db
+          kubectl apply --namespace=fmeflow-basic --filename=tests/expected-basic.yaml
+          kubectl apply --namespace=fmeflow-external-db --filename=tests/expected-external-db-traefik.yaml
 
       # Mark as successful for the publishing job gate.
       - id: success
