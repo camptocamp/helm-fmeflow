@@ -1,3 +1,9 @@
 # yaml-language-server: $schema=https://geoservices-int.camptocamp.com/github/schema.json
 
 profile: helm
+
+# The chart is published only to the OCI registry, so tag-publish no longer
+# creates the GitHub release like the Helm repository publishing did, let
+# GHCI create the release from the tag and generate its changelog.
+changelog:
+  create-release: true
